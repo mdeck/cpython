@@ -147,11 +147,12 @@ import sys
 import tokenize
 import token
 import types
+import weakref
 import functools
 import builtins
 from keyword import iskeyword
 from operator import attrgetter
-from collections import namedtuple, OrderedDict
+from collections import defaultdict, namedtuple, OrderedDict
 
 # Create constants for the compiler flags in Include/code.h
 # We try to get them from dis to avoid duplication
@@ -974,7 +975,7 @@ def getabsfile(object, _filename=None):
 
 modulesbyfile = {}
 _filesbymodname = {}
-_moduleless = set()
+_moduleless = defaultdict(list)
 
 def getmodule(object, _filename=None):
     """Return the module an object was defined in, or None if not found."""
@@ -985,19 +986,21 @@ def getmodule(object, _filename=None):
     # Try the filename to modulename cache
     if _filename is not None and _filename in modulesbyfile:
         return sys.modules.get(modulesbyfile[_filename])
-    # Compute hash to track moduleless objects
+    # Check for moduleless objects
     code = _getcode(object)
-    hashcode = id(code) ^ hash(code) if code else None
-    if hashcode and hashcode in _moduleless:
-        return None
+    if code and (codes := _moduleless.get(id(code))):
+        if any(code is c() for c in codes):
+            return None
     # Try the cache again with the absolute file name
     try:
         file = getabsfile(object, _filename)
     except (TypeError, FileNotFoundError):
-        _moduleless.add(hashcode)
+        if code:
+            _moduleless[id(code)].append(weakref.ref(code))
         return None
-    if hashcode and hashcode in _moduleless:
-        return None
+    if code and (codes := _moduleless.get(id(code))):
+        if any(code is c() for c in codes):
+            return None
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
     _update_module_file_name_cache()
@@ -1006,7 +1009,8 @@ def getmodule(object, _filename=None):
     # Check the main module
     main = sys.modules['__main__']
     if not hasattr(object, '__name__'):
-        _moduleless.add(hashcode)
+        if code:
+            _moduleless[id(code)].append(weakref.ref(code))
         return None
     if hasattr(main, object.__name__):
         mainobject = getattr(main, object.__name__)
@@ -1018,7 +1022,8 @@ def getmodule(object, _filename=None):
         builtinobject = getattr(builtin, object.__name__)
         if builtinobject is object:
             return builtin
-    _moduleless.add(hashcode)
+    if code:
+        _moduleless[id(code)].append(weakref.ref(code))
     return None
 
 def _update_module_file_name_cache():
