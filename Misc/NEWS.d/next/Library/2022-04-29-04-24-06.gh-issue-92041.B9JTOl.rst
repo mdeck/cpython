@@ -1,0 +1,1 @@
+Improve inspect.getmodule performance
