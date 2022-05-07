@@ -552,7 +552,11 @@ class TestRetrievingSourceCode(GetSourceBase):
 
     def test_getmodule_file_not_found(self):
         # See bpo-45406
+        checked_objs = set()
         def _getabsfile(obj, _filename):
+            # Ensure none-caching is working
+            self.assertNotIn(obj, checked_objs)
+            checked_objs.add(obj)
             raise FileNotFoundError('bad file')
         with unittest.mock.patch('inspect.getabsfile', _getabsfile):
             f = inspect.currentframe()
