@@ -982,19 +982,21 @@ def getmodule(object, _filename=None):
         return object
     if hasattr(object, '__module__'):
         return sys.modules.get(object.__module__)
-    code = _getcode(object)
-    if code and hash(code) in _moduleless:
-        return None
     # Try the filename to modulename cache
     if _filename is not None and _filename in modulesbyfile:
         return sys.modules.get(modulesbyfile[_filename])
+    # Compute hash to track moduleless objects
+    code = _getcode(object)
+    hashcode = hash(code) if code else None
+    if hashcode and hashcode in _moduleless:
+        return None
     # Try the cache again with the absolute file name
     try:
         file = getabsfile(object, _filename)
     except (TypeError, FileNotFoundError):
-        _moduleless.add(hash(code))
+        _moduleless.add(hashcode)
         return None
-    if code and hash(code) in _moduleless:
+    if hashcode and hashcode in _moduleless:
         return None
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
@@ -1016,7 +1018,7 @@ def getmodule(object, _filename=None):
     # Check the main module
     main = sys.modules['__main__']
     if not hasattr(object, '__name__'):
-        _moduleless.add(hash(code))
+        _moduleless.add(hashcode)
         return None
     if hasattr(main, object.__name__):
         mainobject = getattr(main, object.__name__)
@@ -1028,7 +1030,7 @@ def getmodule(object, _filename=None):
         builtinobject = getattr(builtin, object.__name__)
         if builtinobject is object:
             return builtin
-    _moduleless.add(hash(code))
+    _moduleless.add(hashcode)
     return None
 
 
