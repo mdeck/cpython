@@ -987,7 +987,7 @@ def getmodule(object, _filename=None):
         return sys.modules.get(modulesbyfile[_filename])
     # Compute hash to track moduleless objects
     code = _getcode(object)
-    hashcode = hash(code) if code else None
+    hashcode = id(code) ^ hash(code) if code else None
     if hashcode and hashcode in _moduleless:
         return None
     # Try the cache again with the absolute file name
@@ -1000,19 +1000,7 @@ def getmodule(object, _filename=None):
         return None
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
-    # Update the filename to module name cache and check yet again
-    # Copy sys.modules in order to cope with changes while iterating
-    for modname, module in sys.modules.copy().items():
-        if ismodule(module) and hasattr(module, '__file__'):
-            f = module.__file__
-            if f == _filesbymodname.get(modname, None):
-                # Have already mapped this module, so skip it
-                continue
-            _filesbymodname[modname] = f
-            f = getabsfile(module)
-            # Always map to the name the module knows itself by
-            modulesbyfile[f] = modulesbyfile[
-                os.path.realpath(f)] = module.__name__
+    _update_module_file_name_cache()
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
     # Check the main module
@@ -1033,6 +1021,20 @@ def getmodule(object, _filename=None):
     _moduleless.add(hashcode)
     return None
 
+def _update_module_file_name_cache():
+    """Update the filename to module name cache."""
+    # Copy sys.modules in order to cope with changes while iterating
+    for modname, module in sys.modules.copy().items():
+        if ismodule(module) and hasattr(module, '__file__'):
+            f = module.__file__
+            if f == _filesbymodname.get(modname, None):
+                # Have already mapped this module, so skip it
+                continue
+            _filesbymodname[modname] = f
+            f = getabsfile(module)
+            # Always map to the name the module knows itself by
+            modulesbyfile[f] = modulesbyfile[
+                os.path.realpath(f)] = module.__name__
 
 class ClassFoundException(Exception):
     pass

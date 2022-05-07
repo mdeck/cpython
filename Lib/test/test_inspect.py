@@ -563,6 +563,18 @@ class TestRetrievingSourceCode(GetSourceBase):
             self.assertIsNone(inspect.getmodule(f))
             inspect.getouterframes(f)  # smoke test
 
+    def test_getmodule_break_recursion(self):
+        with unittest.mock.patch(
+            'inspect._update_module_file_name_cache',
+        ) as mock_update, unittest.mock.patch(
+            'inspect.getmodule', side_effect=inspect.getmodule
+        ) as mock_getmodule:
+            d = {}
+            exec("def x(): pass", d)
+            inspect.getmodule(d["x"].__code__)
+            self.assertEqual(mock_getmodule.call_count, 2)
+            self.assertEqual(mock_update.call_count, 1)
+
     def test_getframeinfo_get_first_line(self):
         frame_info = inspect.getframeinfo(self.fodderModule.fr, 50)
         self.assertEqual(frame_info.code_context[0], "# line 1\n")
