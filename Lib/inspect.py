@@ -907,6 +907,14 @@ def getfile(object):
             if object.__module__ == '__main__':
                 raise OSError('source code not available')
         raise TypeError('{!r} is a built-in class'.format(object))
+    if code := _getcode(object):
+        return code.co_filename
+    raise TypeError('module, class, method, function, traceback, frame, or '
+                    'code object was expected, got {}'.format(
+                    type(object).__name__))
+
+def _getcode(object):
+    """Get the code an object was defined in, if available."""
     if ismethod(object):
         object = object.__func__
     if isfunction(object):
@@ -916,10 +924,7 @@ def getfile(object):
     if isframe(object):
         object = object.f_code
     if iscode(object):
-        return object.co_filename
-    raise TypeError('module, class, method, function, traceback, frame, or '
-                    'code object was expected, got {}'.format(
-                    type(object).__name__))
+        return object
 
 def getmodulename(path):
     """Return the module name for a given file, or None."""
@@ -969,6 +974,7 @@ def getabsfile(object, _filename=None):
 
 modulesbyfile = {}
 _filesbymodname = {}
+_moduleless = set()
 
 def getmodule(object, _filename=None):
     """Return the module an object was defined in, or None if not found."""
@@ -976,6 +982,9 @@ def getmodule(object, _filename=None):
         return object
     if hasattr(object, '__module__'):
         return sys.modules.get(object.__module__)
+    code = _getcode(object)
+    if code and hash(code) in _moduleless:
+        return None
     # Try the filename to modulename cache
     if _filename is not None and _filename in modulesbyfile:
         return sys.modules.get(modulesbyfile[_filename])
@@ -983,6 +992,9 @@ def getmodule(object, _filename=None):
     try:
         file = getabsfile(object, _filename)
     except (TypeError, FileNotFoundError):
+        _moduleless.add(hash(code))
+        return None
+    if code and hash(code) in _moduleless:
         return None
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
@@ -1004,6 +1016,7 @@ def getmodule(object, _filename=None):
     # Check the main module
     main = sys.modules['__main__']
     if not hasattr(object, '__name__'):
+        _moduleless.add(hash(code))
         return None
     if hasattr(main, object.__name__):
         mainobject = getattr(main, object.__name__)
@@ -1015,6 +1028,8 @@ def getmodule(object, _filename=None):
         builtinobject = getattr(builtin, object.__name__)
         if builtinobject is object:
             return builtin
+    _moduleless.add(hash(code))
+    return None
 
 
 class ClassFoundException(Exception):
