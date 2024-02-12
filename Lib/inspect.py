@@ -997,21 +997,27 @@ def getmodule(object, _filename=None):
         return None
     if file in modulesbyfile:
         return sys.modules.get(modulesbyfile[file])
-    # Update the filename to module name cache and check yet again
-    # Copy sys.modules in order to cope with changes while iterating
-    for modname, module in sys.modules.copy().items():
-        if ismodule(module) and hasattr(module, '__file__'):
-            f = module.__file__
-            if f == _filesbymodname.get(modname, None):
-                # Have already mapped this module, so skip it
-                continue
-            _filesbymodname[modname] = f
-            f = getabsfile(module)
-            # Always map to the name the module knows itself by
-            modulesbyfile[f] = modulesbyfile[
-                os.path.realpath(f)] = module.__name__
-    if file in modulesbyfile:
-        return sys.modules.get(modulesbyfile[file])
+    basename = os.path.basename(file)
+    if basename.startswith("<frozen ") and basename.endswith(">"):
+        module_name = basename[len("<frozen "):-1]
+        if module_name in sys.modules:
+            return sys.modules.get(module_name)
+    elif basename != "<string>" and not basename.startswith("<stdin>"):
+        # Update the filename to module name cache and check yet again
+        # Copy sys.modules in order to cope with changes while iterating
+        for modname, module in sys.modules.copy().items():
+            if ismodule(module) and hasattr(module, '__file__'):
+                f = module.__file__
+                if f == _filesbymodname.get(modname, None):
+                    # Have already mapped this module, so skip it
+                    continue
+                _filesbymodname[modname] = f
+                f = getabsfile(module)
+                # Always map to the name the module knows itself by
+                modulesbyfile[f] = modulesbyfile[
+                    os.path.realpath(f)] = module.__name__
+        if file in modulesbyfile:
+            return sys.modules.get(modulesbyfile[file])
     # Check the main module
     main = sys.modules['__main__']
     if not hasattr(object, '__name__'):

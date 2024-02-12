@@ -744,10 +744,11 @@ class TestRetrievingSourceCode(GetSourceBase):
         from types import ModuleType
         name = '__inspect_dummy'
         m = sys.modules[name] = ModuleType(name)
-        m.__file__ = "<string>" # hopefully not a real filename...
+        m.__file__ = "<foo>" # hopefully not a real filename...
         m.__loader__ = "dummy"  # pretend the filename is understood by a loader
-        exec("def x(): pass", m.__dict__)
-        self.assertEqual(inspect.getsourcefile(m.x.__code__), '<string>')
+        code = compile("def x(): pass", filename="<foo>", mode="exec")
+        exec(code, m.__dict__)
+        self.assertEqual(inspect.getsourcefile(m.x.__code__), '<foo>')
         del sys.modules[name]
         inspect.getmodule(compile('a=10','','single'))
 
