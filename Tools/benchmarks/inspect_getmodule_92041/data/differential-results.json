@@ -1,0 +1,300 @@
+{
+  "cases": 648,
+  "differences_from_main": {
+    "candidate": {},
+    "replacement": {
+      "(False, '.py', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ]
+    },
+    "combined": {
+      "(False, '.py', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.py', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(False, '.pyc', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.py', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', False, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, False, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'code')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'frame')": [
+        "_inspect_matrix",
+        null
+      ],
+      "(True, '.pyc', '.pyc', True, True, None, 'traceback')": [
+        "_inspect_matrix",
+        null
+      ]
+    },
+    "replacement_fixed": {},
+    "combined_fixed": {}
+  }
+}

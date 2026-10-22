@@ -1,0 +1,27 @@
+{
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "pinned_cpu": 8,
+  "main_commit": "97d361116f27d9a53ff735151ba26f5bcb463b74",
+  "replacement_head": "03df224b0164352e784baaa962c8e41735b7121f",
+  "configure": "./configure --without-ensurepip",
+  "build": "make -j8",
+  "compiler": "GCC 13.3.0",
+  "optimizations": "-O3, no PGO or LTO",
+  "repeats": 15,
+  "batches_per_sample": 3,
+  "calibration_floor_seconds": 0.03,
+  "python_hash_seed": 0,
+  "gc": "disabled during timing",
+  "host_cpu": "AMD EPYC 9V74 (virtualized)"
+}

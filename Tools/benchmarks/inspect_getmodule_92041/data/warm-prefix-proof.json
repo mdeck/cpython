@@ -1,0 +1,17 @@
+[
+  {
+    "base": "main",
+    "candidate": "candidate",
+    "cached_lookup_source_prefix_identical": true
+  },
+  {
+    "base": "replacement",
+    "candidate": "combined",
+    "cached_lookup_source_prefix_identical": true
+  },
+  {
+    "base": "replacement_fixed",
+    "candidate": "combined_fixed",
+    "cached_lookup_source_prefix_identical": true
+  }
+]

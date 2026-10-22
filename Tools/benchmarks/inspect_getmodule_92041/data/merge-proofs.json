@@ -1,0 +1,9 @@
+{
+  "base": "97d361116f27d9a53ff735151ba26f5bcb463b74",
+  "candidate": "6c72434f0e04c950a3908ebf40b1b5d27f64c72a",
+  "replacement_head": "03df224b0164352e784baaa962c8e41735b7121f",
+  "candidate_then_replacement_merge_file_exit": 0,
+  "replacement_then_candidate_merge_file_exit": 0,
+  "both_results_byte_equal_to_explicit_combined": true,
+  "production_candidate_sha256": "1ade97d06f56acf22a1e15894703403020d9f9978a9c6e77646f931dca8e030f"
+}
