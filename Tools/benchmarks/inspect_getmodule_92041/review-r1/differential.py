@@ -1,4 +1,4 @@
-import importlib.util, itertools, json, os, sys, tempfile, types
+import importlib.util, itertools, json, sys, tempfile, types
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 names=['main','candidate','replacement','combined','replacement_fixed','combined_fixed']

@@ -32,7 +32,13 @@ There is no statistically resolved change in these workloads. The refined warm i
 
 ## Reproduction
 
-Run review_crossover.py and warm_refined.py with the built native interpreter. Run analyze_crossover.py and analyze_refined.py using Python with NumPy. They read/write the JSON files beside these scripts. Correctness scripts use the six variant snapshots and the PR test file; run verify_review.py from a checkout of the revision. The corrected replacement remains a measurement variant outside this PR.
+The frozen measured sources are stored as `variants/*.py.txt` so repository tooling does not treat them as maintained Tools scripts. Their bytes and the hashes below are unchanged. Before running the scripts, materialize executable copies from this directory:
+
+```sh
+python -c "from pathlib import Path; [p.with_suffix('').write_bytes(p.read_bytes()) for p in Path('variants').glob('*.py.txt')]"
+```
+
+The hash table names the resulting `.py` files. Run review_crossover.py and warm_refined.py with the built native interpreter. Run analyze_crossover.py and analyze_refined.py using Python with NumPy. They read/write the JSON files beside these scripts. Correctness scripts use the six variant snapshots and the PR test file; run verify_review.py from a checkout of the revision. The corrected replacement remains a measurement variant outside this PR.
 
 ## Snapshot SHA-256
 

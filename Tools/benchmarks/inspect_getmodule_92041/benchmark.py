@@ -1,4 +1,4 @@
-import argparse, gc, importlib.util, json, os, statistics, subprocess, sys, time, timeit, types
+import gc, importlib.util, json, os, statistics, subprocess, sys, time, timeit, types
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 VARIANTS=['main','replacement','candidate','combined','replacement_fixed','combined_fixed','replacement_fixed_control']
