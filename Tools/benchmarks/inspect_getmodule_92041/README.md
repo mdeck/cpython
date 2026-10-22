@@ -2,7 +2,7 @@
 
 **Recommendation: prepare a separate PR for uncached registered frames and tracebacks.** The opportunity is substantial for registered filename-cache misses, survives composition with #156685, and needs 28 added lines of production Python. It does not solve repeated moduleless misses. Do not revive the C watcher/negative-cache portion in this PR.
 
-The prepared code is [on the review branch](https://github.com/mdeck/cpython/tree/inspect-registered-frame-fastpath-20261022); [review the full diff](https://github.com/python/cpython/compare/97d361116f27d9a53ff735151ba26f5bcb463b74...mdeck:cpython:inspect-registered-frame-fastpath-20261022). Final head: `6c72434f0e04c950a3908ebf40b1b5d27f64c72a`. No upstream PR was opened. CPython requires the human author to review AI-assisted changes before proposing them as a PR.
+The prepared code is [on the review branch](https://github.com/mdeck/cpython/tree/inspect-registered-frame-fastpath-20261022); [review the full diff](https://github.com/mdeck/cpython/compare/97d361116f27d9a53ff735151ba26f5bcb463b74...inspect-registered-frame-fastpath-20261022). Final head: `6c72434f0e04c950a3908ebf40b1b5d27f64c72a`. No upstream PR was opened. CPython requires the human author to review AI-assisted changes before proposing them as a PR.
 
 ## Opportunity and implementation
 
