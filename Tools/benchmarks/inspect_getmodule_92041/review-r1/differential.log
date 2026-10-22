@@ -1,0 +1,11 @@
+Cases: 648
+candidate 0
+[]
+replacement 36
+[("(False, '.py', '.pyc', False, True, None, 'code')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', False, True, None, 'frame')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', False, True, None, 'traceback')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', True, True, None, 'code')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', True, True, None, 'frame')", ['_inspect_matrix', None])]
+combined 36
+[("(False, '.py', '.pyc', False, True, None, 'code')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', False, True, None, 'frame')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', False, True, None, 'traceback')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', True, True, None, 'code')", ['_inspect_matrix', None]), ("(False, '.py', '.pyc', True, True, None, 'frame')", ['_inspect_matrix', None])]
+replacement_fixed 0
+[]
+combined_fixed 0
+[]

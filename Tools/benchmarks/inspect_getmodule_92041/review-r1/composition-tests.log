@@ -1,0 +1,21 @@
+test_bytecode_filename_with_available_source (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_bytecode_filename_with_available_source) ... ok
+test_changed_module_filename_is_rechecked (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_changed_module_filename_is_rechecked) ... ok
+test_different_origin_uses_filename_fallback (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_different_origin_uses_filename_fallback) ... ok
+test_dynamic_module_metadata_falls_back (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_dynamic_module_metadata_falls_back) ... ok
+test_existing_filename_cache_retains_precedence (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_existing_filename_cache_retains_precedence) ... ok
+test_explicit_filename_override (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_explicit_filename_override) ... ok
+test_fileless_module_falls_back (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_fileless_module_falls_back) ... ok
+test_filename_collision_uses_globals_owner (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_filename_collision_uses_globals_owner) ... ok
+test_filename_supplied_by_module_getattr_falls_back (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_filename_supplied_by_module_getattr_falls_back) ... ok
+test_invalid_globals_name_falls_back (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_invalid_globals_name_falls_back) ... ok
+test_loader_supplied_by_module_getattr (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_loader_supplied_by_module_getattr) ... ok
+test_registered_owner_without_registry_scan (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_registered_owner_without_registry_scan) ... ok
+test_same_name_replacement_does_not_claim_old_frame (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_same_name_replacement_does_not_claim_old_frame) ... ok
+test_sourceless_import (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_sourceless_import) ... ok
+test_static_filename_with_module_getattr_avoids_scan (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_static_filename_with_module_getattr_avoids_scan) ... ok
+test_unregistered_namespace_uses_filename_fallback (test.test_inspect.test_inspect.TestGetmoduleFrameOwner.test_unregistered_namespace_uses_filename_fallback) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.057s
+
+OK

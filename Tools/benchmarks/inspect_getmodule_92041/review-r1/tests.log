@@ -1,0 +1,44 @@
+tests may fail, unable to create temporary directory '/workspace/scratch/cffa3bfb0a55/cpython/build/test_python_worker_5æ': [Errno 17] File exists: '/workspace/scratch/cffa3bfb0a55/cpython/build/test_python_worker_5æ'
+Traceback (most recent call last):
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/support/os_helper.py", line 541, in temp_dir
+    os.mkdir(path)
+    ~~~~~~~~^^^^^^
+FileExistsError: [Errno 17] File exists: '/workspace/scratch/cffa3bfb0a55/cpython/build/test_python_worker_5æ'
+Stack (most recent call last):
+  File "<frozen runpy>", line 201, in _run_module_as_main
+  File "<frozen runpy>", line 87, in _run_code
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/__main__.py", line 2, in <module>
+    main(_add_python_opts=True)
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/libregrtest/main.py", line 821, in main
+    Regrtest(ns, _add_python_opts=_add_python_opts).main(tests=tests)
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/libregrtest/main.py", line 813, in main
+    exitcode = self.run_tests(selected, tests)
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/libregrtest/main.py", line 615, in run_tests
+    with os_helper.temp_cwd(work_dir, quiet=True):
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/contextlib.py", line 203, in __enter__
+    for once in self.gen:
+  File "/workspace/scratch/cffa3bfb0a55/cpython/Lib/test/support/os_helper.py", line 614, in temp_cwd
+    with temp_dir(path=name, quiet=quiet) as temp_path:
+Using random seed: 3012250175
+0:00:00 load avg: 0.13 Run 6 tests sequentially in a single process
+0:00:00 load avg: 0.13 [1/6] test_inspect.test_inspect
+0:00:01 load avg: 0.13 [1/6] test_inspect.test_inspect passed
+0:00:01 load avg: 0.13 [2/6] test_zipimport_support
+0:00:01 load avg: 0.20 [2/6] test_zipimport_support passed
+0:00:01 load avg: 0.20 [3/6] test_import
+0:00:05 load avg: 0.20 [3/6] test_import passed
+0:00:05 load avg: 0.20 [4/6] test_linecache
+0:00:05 load avg: 0.20 [4/6] test_linecache passed
+0:00:05 load avg: 0.20 [5/6] test_traceback
+0:00:10 load avg: 0.26 [5/6] test_traceback passed
+0:00:10 load avg: 0.26 [6/6] test_pydoc.test_pydoc
+0:00:11 load avg: 0.32 [6/6] test_pydoc.test_pydoc passed
+
+== Tests result: SUCCESS ==
+
+All 6 tests OK.
+
+Total duration: 11.8 sec
+Total tests: run=1,138 skipped=4
+Total test files: run=6/6
+Result: SUCCESS

@@ -1,0 +1,14 @@
+......................................................................................................................................................
+----------------------------------------------------------------------
+Ran 150 tests in 1.175s
+
+OK
+......................................................................................................................................................
+----------------------------------------------------------------------
+Ran 150 tests in 1.005s
+
+OK
+Old guard: new no-scan regression test fails for the expected registry scan
+before 150 repeated dynamic filename/loader/subclass tests passed
+Revised guard: new no-scan regression test passes
+after 150 repeated dynamic filename/loader/subclass tests passed
