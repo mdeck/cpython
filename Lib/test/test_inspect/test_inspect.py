@@ -1050,6 +1050,91 @@ class TestRetrievingSourceCode(GetSourceBase):
             nonlocal __firstlineno__
         self.assertRaises(OSError, inspect.getsource, C)
 
+class TestCachedSourceLookup(unittest.TestCase):
+    SOURCE = "import sys\n\ndef capture():\n    return sys._getframe()\n"
+    EXPECTED = "def capture():\n    return sys._getframe()\n"
+
+    def setUp(self):
+        self.directory = self.enterContext(tempfile.TemporaryDirectory())
+        self.filename = os.path.join(self.directory, 'source.py')
+        with open(self.filename, 'w') as source:
+            source.write(self.SOURCE)
+        self.module = types.ModuleType('_inspect_cached_source')
+        self.module.__file__ = self.filename
+        self.enterContext(unittest.mock.patch.dict(
+            sys.modules, {self.module.__name__: self.module}))
+        self.enterContext(unittest.mock.patch.dict(linecache.cache, clear=True))
+        exec(compile(self.SOURCE, self.filename, 'exec'), self.module.__dict__)
+        self.function = self.module.capture
+
+    def test_complete_cached_source_skips_module_lookup(self):
+        linecache.getlines(self.filename)
+        frame = self.function()
+        self.addCleanup(frame.clear)
+        with unittest.mock.patch.object(
+                inspect, 'getmodule',
+                side_effect=AssertionError('cached source looked up a module')):
+            for obj in (self.function, self.function.__code__, frame):
+                self.assertEqual(inspect.getsource(obj), self.EXPECTED)
+
+    def test_uncached_source_keeps_module_lookup(self):
+        with unittest.mock.patch.object(
+                inspect, 'getmodule', wraps=inspect.getmodule) as lookup:
+            self.assertEqual(inspect.getsource(self.function), self.EXPECTED)
+        lookup.assert_called_once()
+
+    def test_changed_source_invalidates_cached_lines(self):
+        linecache.getlines(self.filename)
+        changed = self.SOURCE.replace('sys._getframe()', '12345678901234567890')
+        with open(self.filename, 'w') as source:
+            source.write(changed)
+        expected = self.EXPECTED.replace('sys._getframe()', '12345678901234567890')
+        with unittest.mock.patch.object(
+                inspect, 'getmodule', wraps=inspect.getmodule) as lookup:
+            self.assertEqual(inspect.getsource(self.function), expected)
+        lookup.assert_called_once()
+
+    def make_loader(self):
+        calls = []
+        source = self.SOURCE
+        class Loader:
+            def get_source(self, fullname):
+                calls.append(fullname)
+                return source
+        loader = Loader()
+        self.module.__loader__ = loader
+        self.module.__spec__ = importlib.machinery.ModuleSpec(
+            self.module.__name__, loader)
+        return calls
+
+    def test_lazy_cached_source_preserves_loader_lookup(self):
+        self.module.__file__ = self.filename + '.missing'
+        calls = self.make_loader()
+        exec(compile(self.SOURCE, self.module.__file__, 'exec'),
+             self.module.__dict__)
+        function = self.module.capture
+        self.assertTrue(linecache.lazycache(self.module.__file__,
+                                           self.module.__dict__))
+        with unittest.mock.patch.object(
+                inspect, 'getmodule', wraps=inspect.getmodule) as lookup:
+            self.assertEqual(inspect.getsource(function), self.EXPECTED)
+        lookup.assert_called_once()
+        self.assertEqual(calls, [self.module.__name__])
+
+    def test_relative_filename_preserves_loader_precedence(self):
+        shadow = os.path.join(self.directory, 'shadow')
+        os.mkdir(shadow)
+        with open(os.path.join(shadow, 'shadow.py'), 'w') as source:
+            source.write(self.SOURCE.replace(
+                'return sys._getframe()', "return 'wrong source'"))
+        self.module.__file__ = self.filename + '.missing'
+        calls = self.make_loader()
+        exec(compile(self.SOURCE, 'shadow.py', 'exec'), self.module.__dict__)
+        with temp_cwd(), DirsOnSysPath(shadow):
+            self.assertEqual(inspect.getsource(self.module.capture), self.EXPECTED)
+        self.assertEqual(calls, [self.module.__name__])
+
+
 class TestGetmoduleFrameOwner(unittest.TestCase):
     def setUp(self):
         self.enterContext(unittest.mock.patch.object(inspect, 'modulesbyfile', {}))

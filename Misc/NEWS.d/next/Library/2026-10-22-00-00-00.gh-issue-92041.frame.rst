@@ -3,3 +3,5 @@ or traceback whose globals identify a registered module with a matching
 filename. A verified globals owner takes precedence over filename-cache
 entries without populating that cache. Code objects retain filename-based
 lookup, which may identify a different module when filenames are shared.
+
+Source inspection also reuses cached lines without an unnecessary module lookup.

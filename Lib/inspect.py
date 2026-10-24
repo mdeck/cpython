@@ -1080,13 +1080,18 @@ def findsource(object):
         if (not (file.startswith('<') and file.endswith('>'))) or file.endswith('.fwork'):
             raise OSError('source code not available')
 
-    module = getmodule(object, file)
-    if module:
-        lines = linecache.getlines(file, module.__dict__)
-        if not lines and file.startswith('<') and hasattr(object, "__code__"):
-            lines = linecache._getlines_from_code(object.__code__)
+    entry = linecache.cache.get(file)
+    if entry is not None and len(entry) != 1 and entry[2]:
+        # Complete cached source does not need module or loader metadata.
+        lines = entry[2]
     else:
-        lines = linecache.getlines(file)
+        module = getmodule(object, file)
+        if module:
+            lines = linecache.getlines(file, module.__dict__)
+            if not lines and file.startswith('<') and hasattr(object, "__code__"):
+                lines = linecache._getlines_from_code(object.__code__)
+        else:
+            lines = linecache.getlines(file)
     if not lines:
         raise OSError('could not get source code')
 
