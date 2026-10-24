@@ -772,14 +772,13 @@ Retrieving source code
    if the module cannot be determined.
 
    .. versionchanged:: 3.16
-      On a filename-cache miss, frames and tracebacks may be resolved from
-      a registered module whose global namespace and canonical filename match
-      the frame. Existing filename-cache entries retain precedence. If multiple
-      modules share a filename, the result may differ from earlier Python
-      versions and can depend on previous lookups: the frame's globals owner
-      is not guaranteed to take precedence. Code objects continue to use
-      filename-based lookup and can also be affected by earlier frame or
-      traceback lookups.
+      Frames and tracebacks are first matched to a registered module with
+      the same global namespace and a matching canonical filename. A verified
+      globals owner takes precedence over filename-cache entries, and this
+      lookup does not populate the filename cache. If multiple modules share
+      a filename, frame and traceback results may differ from earlier Python
+      versions. Code objects continue to use filename-based lookup and may
+      identify a different module from a frame executing that code.
 
 
 .. function:: getsourcefile(object)

@@ -920,8 +920,13 @@ class TestRetrievingSourceCode(GetSourceBase):
         # See bpo-45406
         def _getabsfile(obj, _filename):
             raise FileNotFoundError('bad file')
+        # Use an unregistered namespace to exercise the filename fallback.
+        # Registered frames with equal filenames need no path normalization.
+        namespace = {}
+        exec('import sys\nframe = sys._getframe()', namespace)
+        self.addCleanup(namespace.pop, 'frame', None)
         with unittest.mock.patch('inspect.getabsfile', _getabsfile):
-            f = inspect.currentframe()
+            f = namespace['frame']
             self.assertIsNone(inspect.getmodule(f))
             inspect.getouterframes(f)  # smoke test
 
@@ -1082,29 +1087,101 @@ class TestGetmoduleFrameOwner(unittest.TestCase):
                     self.assertIs(inspect.getmodule(object, self.filename),
                                   self.module)
 
-    def test_filename_collision_uses_globals_owner(self):
+    def test_filename_collision_keeps_globals_owner(self):
         frame, traceback = self.capture()
         other = types.ModuleType('_inspect_frame_collision')
         other.__file__ = self.filename
         with unittest.mock.patch.dict(sys.modules, {other.__name__: other}):
-            for object in (frame, traceback):
-                self.assertIs(inspect.getmodule(object), self.module)
+            other_frame, other_traceback = self.capture(other.__dict__)
+            for obj in (frame, traceback):
+                self.assertIs(inspect.getmodule(obj), self.module)
+            for obj in (other_frame, other_traceback):
+                self.assertIs(inspect.getmodule(obj), other)
 
-            # An unrelated miss scans the registry and can replace that entry.
+            # Frame lookups do not populate the filename cache for bare code.
+            self.assertEqual(inspect.modulesbyfile, {})
+            self.assertEqual(inspect._filesbymodname, {})
+            self.assertIs(inspect.getmodule(frame.f_code), other)
+            before = inspect.modulesbyfile.copy()
             self.assertIsNone(inspect.getmodule(
                 compile('pass', '<inspect-unrelated-miss>', 'exec')))
-            for object in (frame, traceback):
-                self.assertIs(inspect.getmodule(object), other)
-
-            # Bare code uses the filename map, including entries populated
-            # by an earlier frame lookup.
-            inspect.modulesbyfile.clear()
-            inspect._filesbymodname.clear()
+            for obj in (frame, traceback):
+                self.assertIs(inspect.getmodule(obj), self.module)
+            for obj in (other_frame, other_traceback):
+                self.assertIs(inspect.getmodule(obj), other)
+            self.assertEqual(inspect.modulesbyfile, before)
             self.assertIs(inspect.getmodule(frame.f_code), other)
+
+    def test_equal_filenames_avoid_path_normalization(self):
+        frame, traceback = self.capture()
+        with unittest.mock.patch.object(
+                inspect, 'getabsfile',
+                side_effect=AssertionError('equal filenames were normalized')):
+            for obj in (frame, traceback):
+                self.assertIs(inspect.getmodule(obj), self.module)
+                self.assertIs(inspect.getmodule(obj, self.filename), self.module)
+
+    def test_globals_dict_subclass_does_not_call_get_override(self):
+        class Globals(dict):
+            def get(self, key, default=None):
+                raise AssertionError('globals.get override was called')
+
+        namespace = Globals(__name__=self.module.__name__)
+        frame, traceback = self.capture(namespace)
+        for obj in (frame, traceback):
             inspect.modulesbyfile.clear()
             inspect._filesbymodname.clear()
-            self.assertIs(inspect.getmodule(frame), self.module)
-            self.assertIs(inspect.getmodule(frame.f_code), self.module)
+            self.assertIs(inspect.getmodule(obj), self.module)
+            self.assertIs(inspect.getmodule(obj), self.module)
+
+    def test_code_filename_subclass_uses_existing_fallback(self):
+        class Filename(str):
+            def __eq__(self, other):
+                raise AssertionError('filename equality override was called')
+            __hash__ = str.__hash__
+
+        with open(self.filename, 'w') as source:
+            source.write('pass\n')
+        code = compile('import sys\nframe = sys._getframe()\n'
+                       'try: 1 / 0\n'
+                       'except ZeroDivisionError as error:\n'
+                       '    traceback = error.__traceback__\n',
+                       self.filename, 'exec')
+        code = code.replace(co_filename=Filename(self.filename))
+        namespace = self.module.__dict__
+        exec(code, namespace)
+        self.addCleanup(namespace.pop, 'frame', None)
+        self.addCleanup(namespace.pop, 'traceback', None)
+        inspect.modulesbyfile[self.filename] = self.module.__name__
+        for obj in (namespace['frame'], namespace['traceback']):
+            self.assertIs(inspect.getmodule(obj), self.module)
+            self.assertIs(inspect.getmodule(obj, self.filename), self.module)
+
+    def test_fallback_retains_explicit_filename_cache_precedence(self):
+        filename = os.path.join(self.directory, 'other.py')
+        alias = os.path.join(self.directory, '.', 'other.py')
+        frame, traceback = self.capture(filename=alias)
+        other = types.ModuleType('_inspect_foreign_source')
+        other.__file__ = filename
+        cached = types.ModuleType('_inspect_explicit_cached')
+        with unittest.mock.patch.dict(
+                sys.modules, {other.__name__: other, cached.__name__: cached}):
+            inspect.modulesbyfile[filename] = other.__name__
+            inspect.modulesbyfile[alias] = cached.__name__
+            for obj in (frame, traceback):
+                self.assertIs(inspect.getmodule(obj, alias), cached)
+                self.assertIs(inspect.getmodule(obj), other)
+
+    def test_equivalent_filenames_are_normalized(self):
+        filename = os.path.join(self.directory, '.', 'owner.py')
+        frame, traceback = self.capture(filename=filename)
+        class NoScanDict(dict):
+            def copy(self):
+                raise AssertionError('registered frame scanned sys.modules')
+        with unittest.mock.patch.object(sys, 'modules', NoScanDict(sys.modules)):
+            for obj in (frame, traceback):
+                self.assertIs(inspect.getmodule(obj), self.module)
+                self.assertIs(inspect.getmodule(obj, filename), self.module)
 
     def test_static_filename_with_module_getattr_avoids_scan(self):
         def module_getattr(name):
@@ -1166,14 +1243,17 @@ class TestGetmoduleFrameOwner(unittest.TestCase):
         for object in (frame, traceback):
             self.assertIs(inspect.getmodule(object), self.module)
 
-    def test_existing_filename_cache_retains_precedence(self):
+    def test_registered_owner_overrides_filename_cache(self):
         frame, traceback = self.capture()
         other = types.ModuleType('_inspect_frame_cached')
         other.__file__ = self.filename
         with unittest.mock.patch.dict(sys.modules, {other.__name__: other}):
             self.assertIs(inspect.getmodule(None, self.filename), other)
             for object in (frame, traceback):
-                self.assertIs(inspect.getmodule(object), other)
+                self.assertIs(inspect.getmodule(object), self.module)
+
+            self.assertIs(inspect.getmodule(None, self.filename), other)
+            self.assertIs(inspect.getmodule(frame.f_code), other)
 
     def test_changed_module_filename_is_rechecked(self):
         frame, traceback = self.capture()
